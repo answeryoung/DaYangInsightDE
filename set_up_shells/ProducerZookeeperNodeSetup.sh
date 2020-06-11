@@ -1,7 +1,6 @@
 #!/bin/sh
 cd ~
 echo $PWD
-sudo yum update
 sudo yum install java-1.8.0-openjdk
 sudo yum install python3.7
 curl -O https://bootstrap.pypa.io/get-pip.py
