@@ -1,8 +1,7 @@
 #!/bin/sh
 cd ~
 echo $PWD
-yes | sudo yum install java-1.8.0-openjdk
-yes | sudo yum install python3.7
+yes | sudo yum install java-1.8.0-openjdk python3.7
 
 # get scala_2.11
 yes | wget http://downloads.lightbend.com/scala/2.11.12/scala-2.11.12.rpm
@@ -31,18 +30,20 @@ sudo sed -i 's#PATH=.*#PATH=$PATH:/usr/local/kafka/bin:$HOME/.local/bin:$HOME/bi
 source /home/ec2-user/.bash_profile
 
 # setting up auto-start zookeeper
-sudo echo '/usr/local/kafka/bin/zookeeper-server-start.sh -daemon \
-  /usr/local/kafka/config/zookeeper.properties' \
-  >> /etc/rc.d/rc.local
-# sudo echo '/usr/local/kafka/bin/zookeeper-server-start.sh \
-#   /usr/local/kafka/config/zookeeper.properties \
-#    > /dev/null 2>&1 &' >> /etc/rc.d/rc.local
-sudo chmod 700 /etc/rc.d/rc.locall
+sudo sed -i '$ a /usr/local/kafka/bin/zookeeper-server-start.sh -daemon \\' /etc/rc.d/rc.local 
+sudo sed -i '$ a \  /usr/local/kafka/config/zookeeper.properties' /etc/rc.d/rc.local 
+
+# sudo sed -i '$ a /usr/local/kafka/bin/zookeeper-server-start.sh \\' /etc/rc.d/rc.local 
+# sudo sed -i '$ a \  /usr/local/kafka/config/zookeeper.properties \\' /etc/rc.d/rc.local
+# sudo sed -i '$ a \  > /dev/null 2>&1 &' /etc/rc.d/rc.local
+
+sudo chmod 733 /etc/rc.d/rc.locall
 sudo systemctl enable rc-local
 sudo systemctl start rc-local  
   
 # write some output to concole
 cat /usr/local/kafka/config/zookeeper.properties
-java --version
-scalar --version
+echo ""
+java -version
+scala -version
 python3 --version
