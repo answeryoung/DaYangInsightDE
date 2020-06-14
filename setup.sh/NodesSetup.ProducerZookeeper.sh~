@@ -1,0 +1,45 @@
+#!/bin/sh
+# NodesSetup.ProducerZookeeper.sh
+# DY200614
+
+cd ~
+echo $PWD
+sh getDevTools.sh
+sh anoteCluster.sh
+# get kafka
+wget -c $kafka_bin_url -O - | tar -xz
+
+# setup zookeeper
+sudo mv /home/ec2-user/kafka_2.11-2.4.1/    /usr/local/kafka
+
+# edit zookeeper.properties
+zkpr_prop="/usr/local/kafka/config/zookeeper.properties"
+data_dir="/home/ec2-user/zookeeper-data"
+sed -i "s#dataDir=.*#dataDir=$data_dir" \
+  $zkpr_prop
+mkdir $data_dir
+
+# add kafka to PATH
+sudo sed -i 's#PATH=.*#PATH=$PATH:/usr/local/kafka/bin:$HOME/.local/bin:$HOME/bin#' \
+  $HOME/.bash_profile
+. $HOME/.bash_profile
+
+# get kafka-python and babo3
+pip3 install kafka-python
+pip3 install boto3
+
+# setting up auto-start zookeeper
+sudo sed -i "$ a /usr/local/kafka/bin/zookeeper-server-start.sh -daemon \\\ \n\
+  /usr/local/kafka/config/zookeeper.properties" /etc/rc.d/rc.local
+sudo chmod +x /etc/rc.d/rc.locall
+sudo systemctl enable rc-local
+sudo systemctl start rc-local
+  
+# write some output to concole
+echo ""
+java -version
+scala -version
+python3 --version
+sed -n 'dataDir=.*/p' $zkpr_prop
+echo $PATH
+echo $JAVA_HOME

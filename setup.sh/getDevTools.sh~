@@ -1,0 +1,38 @@
+#!/bin/sh
+cd ~
+echo $PWD
+sh setDistributionNames.sh
+# get Development Tools
+sudo yum groupinstall "Development Tools"
+
+# get java and python3
+yes | sudo yum install $java_dist $python3_dist 
+curl -O https://bootstrap.pypa.io/get-pip.py
+python3 get-pip.py
+
+# set JAVA_HOME
+# $ file $(which java)
+# /usr/bin/java: symbolic link to `/etc/alternatives/java'
+# $ file /etc/alternatives/java
+# /etc/alternatives/java: symbolic link to `/usr/lib/jvm/java-1.8.0-openjdk-1.8.0.252.b09-2.amzn2.0.1.x86_64/jre/bin/java'
+# $ javaHome="/usr/lib/jvm/java-1.8.0-openjdk-1.8.0.252.b09-2.amzn2.0.1.x86_64/jre"
+# THIS IS HOW TO FIND JAVA_HOME (already set in setDistributionNames.sh)
+sudo sed -i -e "/export PATH/i\JAVA_HOME=\"$javaHome\"" \
+  -e '/export PATH/i\PATH=$JAVA_HOME/bin:$PATH' \
+  -e '/export PATH/i\ ' \ 
+  /home/ec2-user/.bash_profile
+
+# get scala
+wget -c $scala_bin_url -O - | tar -xz
+yes | wget http://downloads.lightbend.com/scala/2.11.12/scala-2.11.12.rpm
+sudo yum -y install scala-2.11.12.rpm
+
+
+file $(which java)
+
+$javaHome=/usr/lib/jvm/java-1.8.0-openjdk-1.8.0.252.b09-2.amzn2.0.1.x86_64
+sudo sed -i \
+  "$ a JAVA_HOME=$javaHome/jre" \
+  /etc/enviroment
+  
+  
