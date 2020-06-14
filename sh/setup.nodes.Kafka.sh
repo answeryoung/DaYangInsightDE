@@ -30,10 +30,10 @@ sed -i -e "s/broker.id=.*/broker.id=$broker_id/g" \
   -e 's/offsets.topic.replication.factor=.*/offsets.topic.replication.factor=2/g' \
   -e '/transaction.state.log.min.isr=.*/a\min.insync.replicas=2' \
   $kafkaHome/config/server.properties
-sed -i -e '/min.insync.replicas=.*/a\default.replication.factor=2' \ 
+sed -i -e '/min.insync.replicas=.*/a\default.replication.factor=2' \
   -e 's/log.retention.hours=.*/log.retention.hours=4/g' \
-  -e "s/zookeeper.connect=.*/zookeeper.connect=$zookeeperIp:$zookeeperPort/g" \
-  $kafkaHome/config/server.properties                                                                                                                                                                
+  -e "s/zookeeper.connect=.*/zookeeper.connect=${zookeeperIp}:${zookeeperPort}/g"  \
+  $kafkaHome/config/server.properties    
 
 echo ""
 echo ""

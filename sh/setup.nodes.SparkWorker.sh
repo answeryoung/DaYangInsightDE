@@ -69,5 +69,5 @@ echo $PATH
 echo ""
 echo $JAVA_HOME
 
-sleep 5
-sudo systemctl start rc-local
+# sleep 5
+# sudo systemctl start rc-local
