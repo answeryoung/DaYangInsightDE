@@ -44,8 +44,8 @@ export SPARK_WORKER_CORES=8" \
 # ${sparkWorkerIps[1]} \n\
 # ${sparkWorkerIps[2]} \n\
 # ${sparkWorkerIps[3]} " \
-#   $sparkHome\conf/slaves.template \
-#   $sparkHome\conf/slaves
+#   $sparkHome/conf/slaves.template \
+#   $sparkHome/conf/slaves
 #          
 # echo ""
 # echo ""       
