@@ -13,7 +13,7 @@ echo ""
 echo "#get spark"
 sparkHome="/usr/local/spark"
 wget -c $spark_bin_url -O - | tar -xz
-sudo mv spark_*/ $sparkHome
+sudo mv spark-*/ $sparkHome
 
 # add spark to PATH
 sudo sed -i 's#PATH=.*#PATH=$PATH:$sparkHome/bin:$HOME/.local/bin:$HOME/bin#' \

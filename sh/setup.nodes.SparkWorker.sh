@@ -13,7 +13,7 @@ echo ""
 echo "#get spark"
 sparkHome="/usr/local/spark"
 wget -c $spark_bin_url -O - | tar -xz
-sudo mv spark_*/ $sparkHome
+sudo mv spark-*/ $sparkHome
 
 # add spark to PATH
 sudo sed -i 's#PATH=.*#PATH=$PATH:$sparkHome/bin:$HOME/.local/bin:$HOME/bin#' \
@@ -27,7 +27,7 @@ echo "#append to spark-env.sh"
 sudo sed -e "$ a \ " \
 -e "$ a \
 # contents of conf/spark-env.sh \n\
-export SPARK_MASTER_HOST=localhost \n\
+export SPARK_MASTER_HOST=$sparkMasterIp \n\
 export JAVA_HOME=$JAVA_HOME \n\
 # For PySpark use \n\
 export PYSPARK_PYTHON=python3 \n\
@@ -36,25 +36,25 @@ export SPARK_WORKER_CORES=8" \
   $sparkHome/conf/spark-env.sh.template \
   > $sparkHome/conf/spark-env.sh
 
-# append to slave
-sudo sed -e "$ a \ " \
--e "$ a \
-# contents of conf/slaves \n\
-${sparkWorkerIps[0]} \n\
-${sparkWorkerIps[1]} \n\
-${sparkWorkerIps[2]} \n\
-${sparkWorkerIps[3]} " \
-  $sparkHome\conf/slaves.template \
-  $sparkHome\conf/slaves
-
-echo ""
-echo ""
-echo "#setting up auto-starting spark cluster"
-sudo sed -i "$ a sh $sparkHome/sbin/start-all.sh" \
-  /etc/rc.d/rc.local
-sudo chmod +x /etc/rc.d/rc.local
-sudo systemctl enable rc-local
-# sudo systemctl start rc-local
+# # append to slave
+# sudo sed -e "$ a \ " \
+# -e "$ a \
+# # contents of conf/slaves \n\
+# ${sparkWorkerIps[0]} \n\
+# ${sparkWorkerIps[1]} \n\
+# ${sparkWorkerIps[2]} \n\
+# ${sparkWorkerIps[3]} " \
+#   $sparkHome\conf/slaves.template \
+#   $sparkHome\conf/slaves
+#          
+# echo ""
+# echo ""       
+# echo "#setting up auto-starting spark cluster"
+# sudo sed -i "$ a sh $sparkHome/sbin/start-all.sh" \
+#   /etc/rc.d/rc.local
+# sudo chmod +x /etc/rc.d/rc.local
+# sudo systemctl enable rc-local
+# # sudo systemctl start rc-local    
 
 # write some output to concole
 echo ""
@@ -69,5 +69,5 @@ echo $PATH
 echo ""
 echo $JAVA_HOME
 
-# sleep 5
-# sudo systemctl start rc-local
+# sleep 5       
+# sudo systemctl start rc-local 
