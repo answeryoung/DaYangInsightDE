@@ -1,20 +1,25 @@
 #!/bin/sh
-# NodesSetup.Kafka.sh
+# setup.nodes.Kafka.sh
 # DY200614
 
 read -p 'Kafka Broker ID [0,1,2]: ' broker_id
 
-cd ~
+cd "$(dirname "$0")"
 echo $PWD
-sh getDevTools.sh
-sh anoteCluster.sh
+. ./anote.cluster.sh
+. ./anote.distributions.sh
+sh setup.getDevTools.sh
 
-# get kafka
+echo ""
+echo ""
+echo "get kafka"
 kafkaHome="/usr/local/kafka"
 mkdir $kafkaHome
 wget -c $kafka_bin_url -O - | tar -xz $kafkaHome
 
-# edit server.properties
+echo ""
+echo ""
+echo "edit server.properties"
 log_dir="$HOME/kafka-logs"
 mkdir $log_dir
 

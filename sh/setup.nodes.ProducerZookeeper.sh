@@ -1,23 +1,28 @@
 #!/bin/sh
-# NodesSetup.ProducerZookeeper.sh
+# setup.nodes.ProducerZookeeper.sh
 # DY200614
 
-cd ~
+cd "$(dirname "$0")"
 echo $PWD
-sh getDevTools.sh
-sh anoteCluster.sh
+. ./anote.cluster.sh
+. ./anote.distributions.sh
+sh setup.getDevTools.sh
 
-# get kafka
+echo ""
+echo ""
+echo "get kafka"
 kafkaHome="/usr/local/kafka"
 mkdir $kafkaHome
 wget -c $kafka_bin_url -O - | tar -xz $kafkaHome
 
-# edit zookeeper.properties
+echo ""
+echo ""
+echo "edit zookeeper.properties"
 data_dir="$HOME/zookeeper-data"
 mkdir $data_dir
 
 sed -i "s#dataDir=.*#dataDir=$data_dir" \
-  $zkpr_prop
+  $kafkaHome/config/zookeeper.properties
 
 # add kafka to PATH
 sudo sed -i 's#PATH=.*#PATH=$PATH:/usr/local/kafka/bin:$HOME/.local/bin:$HOME/bin#' \
@@ -40,6 +45,6 @@ echo ""
 java -version
 scala -version
 python3 --version
-sed -n 'dataDir=.*/p' $zkpr_prop
+sed -n 'dataDir=.*/p' $kafkaHome/config/zookeeper.properties
 echo $PATH
 echo $JAVA_HOME

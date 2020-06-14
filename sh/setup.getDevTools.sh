@@ -1,21 +1,30 @@
 #!/bin/sh
-# getDevTools.sh
+# setup.getDevTools.sh
 # java python3 scala
 # pip sbt
 # DY200614
 
-cd ~
+cd "$(dirname "$0")"
 echo $PWD
+# source from anote.distributions.sh 
+#. ./anote.distributions.sh
 
-ch anoteDistributions.sh
-
-# get Development Tools
+echo ""
+echo ""
+echo 'get "Development Tools"'
+sleep 1
 sudo yum groupinstall "Development Tools"
 
-# get java and python3
+echo ""
+echo ""
+echo "get java and python3"
+sleep 1
 yes | sudo yum install $java_dist $python3_dist 
 
-# set JAVA_HOME
+echo ""
+echo ""
+echo "set JAVA_HOME"
+sleep 1
 # $file $(which java)
 # /usr/bin/java: symbolic link to `/etc/alternatives/java'
 # $file /etc/alternatives/java
@@ -29,12 +38,22 @@ sudo sed -i -e "/export PATH/i\JAVA_HOME=\"$javaHome\"" \
   $HOME/.bash_profile
 . $HOME/.bash_profile
 
-# get scala
+echo ""
+echo ""
+echo "get scala"
+sleep 1
 yes | sudo rpm -i $scala_bin_url
 
-# setup pip and sbt
+echo ""
+echo ""
+echo "setup pip"
+sleep 1
 curl -O https://bootstrap.pypa.io/get-pip.py
 python3 get-pip.py  
 
+echo ""
+echo ""
+echo "setup sbt"
+sleep 1
 curl https://bintray.com/sbt/rpm/rpm | sudo tee /etc/yum.repos.d/bintray-sbt-rpm.repo
 yes | sudo yum install sbt 
