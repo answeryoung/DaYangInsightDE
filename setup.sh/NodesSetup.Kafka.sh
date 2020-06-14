@@ -39,7 +39,7 @@ sudo sed -i 's#PATH=.*#PATH=$PATH:/usr/local/kafka/bin:$HOME/.local/bin:$HOME/bi
 sudo sed -i "$ a $kafkaHome/bin/kafka-server-start.sh -daemon \\\ \n\
   $kafkaHome/config/server.properties" \
   /etc/rc.d/rc.local
-sudo chmod +x /etc/rc.d/rc.locall
+sudo chmod +x /etc/rc.d/rc.local
 sudo systemctl enable rc-local
 sudo systemctl start rc-local
 

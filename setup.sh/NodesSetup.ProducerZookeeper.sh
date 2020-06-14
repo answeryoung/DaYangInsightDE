@@ -31,7 +31,7 @@ pip3 install boto3
 # setting up auto-start zookeeper
 sudo sed -i "$ a $kafkaHome/bin/zookeeper-server-start.sh -daemon \\\ \n\
   $kafkaHome/config/zookeeper.properties" /etc/rc.d/rc.local
-sudo chmod +x /etc/rc.d/rc.locall
+sudo chmod +x /etc/rc.d/rc.local
 sudo systemctl enable rc-local
 sudo systemctl start rc-local
   
