@@ -11,19 +11,19 @@ echo $PWD
 
 echo ""
 echo ""
-echo 'get "Development Tools"'
+echo '#get "Development Tools"'
 sleep 1
 yes | sudo yum groupinstall "Development Tools"
 
 echo ""
 echo ""
-echo "get java and python3"
+echo "#get java and python3"
 sleep 1
 yes | sudo yum install $java_dist $python3_dist 
 
 echo ""
 echo ""
-echo "set JAVA_HOME"
+echo "#set JAVA_HOME"
 sleep 1
 # $file $(which java)
 # /usr/bin/java: symbolic link to `/etc/alternatives/java'
@@ -36,24 +36,25 @@ sudo sed -i -e "/export PATH/i\JAVA_HOME=\"$javaHome\"" \
   -e '/export PATH/i\PATH=$JAVA_HOME/bin:$PATH' \
   -e '/export PATH/i\ ' \
   $HOME/.bash_profile
-. $HOME/.bash_profile
+# cd $HOME
+# . ./.bash_profile
 
 echo ""
 echo ""
-echo "get scala"
+echo "#get scala"
 sleep 1
 yes | sudo rpm -i $scala_bin_url
 
 echo ""
 echo ""
-echo "setup pip"
+echo "#setup pip"
 sleep 1
 curl -O https://bootstrap.pypa.io/get-pip.py
 python3 get-pip.py  
 
 echo ""
 echo ""
-echo "setup sbt"
+echo "#setup sbt"
 sleep 1
 curl https://bintray.com/sbt/rpm/rpm | sudo tee /etc/yum.repos.d/bintray-sbt-rpm.repo
 yes | sudo yum install sbt 

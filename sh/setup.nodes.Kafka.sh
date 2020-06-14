@@ -36,9 +36,10 @@ sed -i -e '/min.insync.replicas=.*/a\default.replication.factor=2' \
   $kafkaHome/config/server.properties                                                                                                                                                                
 
 # add kafka to PATH
-sudo sed -i 's#PATH=.*#PATH=$PATH:/usr/local/kafka/bin:$HOME/.local/bin:$HOME/bin#' \
+sudo sed -i 's#PATH=.*#PATH=$PATH:/usr/local/kafka/bin:$HOME/.local/bin:$HOME/bin#,0' \
   $HOME/.bash_profile
-. $HOME/.bash_profile
+cd $HOME
+. ./.bash_profile
 
 # setting up auto-start kafka
 sudo sed -i "$ a $kafkaHome/bin/kafka-server-start.sh -daemon \\\ \n\
@@ -50,9 +51,13 @@ sudo systemctl start rc-local
 
 # write some output to concole
 echo ""
+echo ""
+echo ""
+echo ""
 java -version
 scala -version
 sed -n -e '/broker.id=.*/p' -e '/zookeeper.connect=.*/p' \
   $kafkaHome/config/server.properties 
 echo $PATH
+echo ""
 echo $JAVA_HOME

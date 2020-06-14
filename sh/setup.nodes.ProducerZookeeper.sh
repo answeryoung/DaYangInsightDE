@@ -10,14 +10,14 @@ sh setup.getDevTools.sh
 
 echo ""
 echo ""
-echo "get kafka"
+echo "#get kafka"
 kafkaHome="/usr/local/kafka"
 wget -c $kafka_bin_url -O - | tar -xz -C $kafkaHome
 sudo mv kafka_*/ $kafkaHome
 
 echo ""
 echo ""
-echo "edit zookeeper.properties"
+echo "#edit zookeeper.properties"
 data_dir="$HOME/zookeeper-data"
 mkdir $data_dir
 
@@ -26,20 +26,21 @@ sed -i "s#dataDir=.*#dataDir=$data_dir" \
 
 echo ""
 echo ""
-echo "add kafka to PATH"
-sudo sed -i 's#PATH=.*#PATH=$PATH:/usr/local/kafka/bin:$HOME/.local/bin:$HOME/bin#' \
+echo "#add kafka to PATH"
+sudo sed -i 's#PATH=.*#PATH=$PATH:/usr/local/kafka/bin:$HOME/.local/bin:$HOME/bin#,0' \
   $HOME/.bash_profile
-. $HOME/.bash_profile
+cd $HOME
+. ./.bash_profile
 
 echo ""
 echo ""
-echo "get kafka-python and babo3"
+echo "#get kafka-python and babo3"
 pip3 install kafka-python
 pip3 install boto3
 
 echo ""
 echo ""
-echo "setting up auto-starting zookeeper"
+echo "#setting up auto-starting zookeeper"
 sudo sed -i "$ a $kafkaHome/bin/zookeeper-server-start.sh -daemon \\\ \n\
   $kafkaHome/config/zookeeper.properties" /etc/rc.d/rc.local
 sudo chmod +x /etc/rc.d/rc.local
@@ -54,6 +55,7 @@ echo ""
 java -version
 scala -version
 python3 --version
-sed -n 'dataDir=.*/p' $kafkaHome/config/zookeeper.properties
+sed -n '/dataDir=.*/p' $kafkaHome/config/zookeeper.properties
 echo $PATH
+echo ""
 echo $JAVA_HOME
