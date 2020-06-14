@@ -13,7 +13,7 @@ echo ""
 echo ""
 echo 'get "Development Tools"'
 sleep 1
-sudo yum groupinstall "Development Tools"
+yes | sudo yum groupinstall "Development Tools"
 
 echo ""
 echo ""

@@ -14,8 +14,8 @@ echo ""
 echo ""
 echo "get kafka"
 kafkaHome="/usr/local/kafka"
-mkdir $kafkaHome
-wget -c $kafka_bin_url -O - | tar -xz $kafkaHome
+wget -c $kafka_bin_url -O - | tar -xz -C $kafkaHome
+sudo mv kafka_*/ $kafkaHome
 
 echo ""
 echo ""
