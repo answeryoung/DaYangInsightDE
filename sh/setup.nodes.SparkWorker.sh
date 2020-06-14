@@ -21,9 +21,9 @@ sudo sed -i 's#PATH=.*#PATH=$PATH:$sparkHome/bin:$HOME/.local/bin:$HOME/bin#' \
 cd $HOME
 . ./.bash_profile
 
+echo ""                 
 echo ""
-echo ""
-echo "#append to spark-env.sh"
+echo "#append to spark-env.sh"    
 sudo sed -e "$ a \ " \
 -e "$ a \
 # contents of conf/spark-env.sh \n\
@@ -56,16 +56,16 @@ export SPARK_WORKER_CORES=8" \
 # sudo systemctl enable rc-local
 # # sudo systemctl start rc-local    
 
-# write some output to concole
+# write some output to concole      
+echo ""       
 echo ""
+echo ""                            
 echo ""
-echo ""
-echo ""
-java -version
+java -version                      
 scala -version
 sed -n -e '/broker.id=.*/p' -e '/zookeeper.connect=.*/p' \
   $kafkaHome/config/server.properties 
-echo $PATH
+echo $PATH                      
 echo ""
 echo $JAVA_HOME
 
