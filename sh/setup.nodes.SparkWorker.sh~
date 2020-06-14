@@ -1,11 +1,14 @@
 #!/bin/sh
-# setup.nodes.SparkWorker.sh
-# DY200614
-
-cd "$(dirname "$0")"
+cd ~
 echo $PWD
-sh anoteCluster.sh
-sh getDevTools.sh
+yes | sudo yum install $java_dist $python3_dist 
+java-1.8.0-openjdk python3.7
+$JAVA_HOME=/usr/lib/jvm/java-8-openjdk
+export JAVA_HOME=$JAVA_HOME
+
+# get scala_2.11
+wget http://downloads.lightbend.com/scala/2.11.12/scala-2.11.12.rpm
+sudo yum -y install scala-2.11.12.rpm
 
 # get spark 
 wget https://archive.apache.org/dist/spark/spark-2.4.6/spark-2.4.6-bin-hadoop2.7.tgz

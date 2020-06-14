@@ -3,7 +3,7 @@
 # DY200614
 
 # zookeeper 
-export zookeeperIp="10.0.0.5"
+export zookeeperIp="10.0.0.6"
 export zookeeperPort=2181
 # kafka broker
 declare -A kafkaIps

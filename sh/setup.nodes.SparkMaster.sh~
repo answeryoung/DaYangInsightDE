@@ -1,11 +1,11 @@
 #!/bin/sh
-# setup.nodes.SparkMaster.sh
+# NodesSetup.SparkMaster.sh
 # DY200614
 
 cd "$(dirname "$0")"
 echo $PWD
-sh anoteCluster.sh
 sh getDevTools.sh
+sh anoteCluster.sh
 
 # get spark
 sparkHome="/usr/local/spark"
@@ -41,8 +41,7 @@ sudo sed -e "$ a \ " \
 sparkPath="/usr/local/spark"
 sudo sed -i 's#PATH=.*#PATH=$PATH:$sparkPath/bin:$HOME/.local/bin:$HOME/bin#' \
   $HOME/.bash_profile
-cd $HOME
-. ./.bash_profile
+. $HOME/.bash_profile
 
 
 

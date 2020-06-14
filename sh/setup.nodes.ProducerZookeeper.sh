@@ -12,7 +12,7 @@ echo ""
 echo ""
 echo "#get kafka"
 kafkaHome="/usr/local/kafka"
-wget -c $kafka_bin_url -O - | tar -xz -C $kafkaHome
+wget -c $kafka_bin_url -O - | tar -xz
 sudo mv kafka_*/ $kafkaHome
 
 echo ""
@@ -21,7 +21,7 @@ echo "#edit zookeeper.properties"
 data_dir="$HOME/zookeeper-data"
 mkdir $data_dir
 
-sed -i "s#dataDir=.*#dataDir=$data_dir" \
+sed -i "s#dataDir=.*#dataDir=$data_dir#" \
   $kafkaHome/config/zookeeper.properties
 
 echo ""
@@ -41,8 +41,9 @@ pip3 install boto3
 echo ""
 echo ""
 echo "#setting up auto-starting zookeeper"
-sudo sed -i "$ a $kafkaHome/bin/zookeeper-server-start.sh -daemon \\\ \n\
-  $kafkaHome/config/zookeeper.properties" /etc/rc.d/rc.local
+sudo sed -i "$ a $kafkaHome/bin/zookeeper-server-start.sh -daemon \
+  $kafkaHome/config/zookeeper.properties" \
+  /etc/rc.d/rc.local
 sudo chmod +x /etc/rc.d/rc.local
 sudo systemctl enable rc-local
 sudo systemctl start rc-local
