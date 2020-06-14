@@ -4,46 +4,70 @@
 
 cd "$(dirname "$0")"
 echo $PWD
-sh anoteCluster.sh
-sh getDevTools.sh
+. ./anote.cluster.sh
+. ./anote.distributions.sh
+sh setup.getDevTools.sh
 
-# get spark 
-wget https://archive.apache.org/dist/spark/spark-2.4.6/spark-2.4.6-bin-hadoop2.7.tgz
-tar xvf spark-2.4.6-bin-hadoop2.6.tgz
+echo ""
+echo ""
+echo "#get spark"
+sparkHome="/usr/local/spark"
+wget -c $spark_bin_url -O - | tar -xz
+sudo mv spark_*/ $sparkHome
 
-sudo mv spark-2.4.6-bin-hadoop2.6/    /usr/local/spark
+# add spark to PATH
+sudo sed -i 's#PATH=.*#PATH=$PATH:$sparkHome/bin:$HOME/.local/bin:$HOME/bin#' \
+  $HOME/.bash_profile
+cd $HOME
+. ./.bash_profile
 
-# add spark and javaHome to PATH
-sparkPath="/usr/local/spark"
-# $javaHome is set in getDevTools.sh
-sudo sed -i '0,s#PATH=.*#PATH=$PATH:$sparkPath/bin:$HOME/.local/bin:$HOME/bin#' \
-  /home/ec2-user/.bash_profile
-. /home/ec2-user/.bash_profile
-
-
-# edit spark-env.sh
-sudo sed "$ a \n\
+echo ""
+echo ""
+echo "#append to spark-env.sh"
+sudo sed -e "$ a \ " \
+-e "$ a \
 # contents of conf/spark-env.sh \n\
-export SPARK_MASTER_HOST=localhost
-export JAVA_HOME=$javaHome \n\
+export SPARK_MASTER_HOST=localhost \n\
+export JAVA_HOME=$JAVA_HOME \n\
 # For PySpark use \n\
 export PYSPARK_PYTHON=python3 \n\
 # Oversubscription \n\
 export SPARK_WORKER_CORES=8" \
-  $sparkPath\conf/spark-env.sh.template \
-  $sparkPath\conf/spark-env.sh
+  $sparkHome/conf/spark-env.sh.template \
+  > $sparkHome/conf/spark-env.sh
 
-sudo sed "$ a \n\
+# append to slave
+sudo sed -e "$ a \ " \
+-e "$ a \
 # contents of conf/slaves \n\
-10.0.0.6 \n\
-10.0.0.6 \n\
-10.0.0.6 " \
-  $sparkPath\conf/slaves.template \
-  $sparkPath\conf/slaves.sh
+${sparkWorkerIps[0]} \n\
+${sparkWorkerIps[1]} \n\
+${sparkWorkerIps[2]} \n\
+${sparkWorkerIps[3]} " \
+  $sparkHome\conf/slaves.template \
+  $sparkHome\conf/slaves
 
-sh spark-2.4.6-bin-without-hadoop/sbin/start-all.sh
+echo ""
+echo ""
+echo "#setting up auto-starting spark cluster"
+sudo sed -i "$ a sh $sparkHome/sbin/start-all.sh" \
+  /etc/rc.d/rc.local
+sudo chmod +x /etc/rc.d/rc.local
+sudo systemctl enable rc-local
+# sudo systemctl start rc-local
 
-# get kafka-python and babo3
-curl -O https://bootstrap.pypa.io/get-pip.py
-python3 get-pip.py
-jre-1.8.0-openjdk-1.8.0.252.b09-2.amzn2.0.1.x86_64
+# write some output to concole
+echo ""
+echo ""
+echo ""
+echo ""
+java -version
+scala -version
+sed -n -e '/broker.id=.*/p' -e '/zookeeper.connect=.*/p' \
+  $kafkaHome/config/server.properties 
+echo $PATH
+echo ""
+echo $JAVA_HOME
+
+sleep 5
+sudo systemctl start rc-local

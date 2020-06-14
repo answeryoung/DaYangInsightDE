@@ -1,8 +1,8 @@
 #!/bin/sh
 # setup.nodes.Kafka.sh
 # DY200614
-
-read -p 'Kafka Broker ID [0,1,2]: ' broker_id
+broker_id=$1
+#read -p 'Kafka Broker ID [0,1,2]: ' broker_id
 
 cd "$(dirname "$0")"
 echo $PWD

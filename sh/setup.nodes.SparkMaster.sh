@@ -1,18 +1,29 @@
 #!/bin/sh
-# setup.nodes.SparkMaster.sh
+# setup.nodes.SparkWorker.sh
 # DY200614
 
 cd "$(dirname "$0")"
 echo $PWD
-sh anoteCluster.sh
-sh getDevTools.sh
+. ./anote.cluster.sh
+. ./anote.distributions.sh
+sh setup.getDevTools.sh
 
-# get spark
+echo ""
+echo ""
+echo "#get spark"
 sparkHome="/usr/local/spark"
-mkdir $sparkHome 
-wget -c $spark_bin_url -O - | tar -xz $sparkHome
+wget -c $spark_bin_url -O - | tar -xz
+sudo mv spark_*/ $sparkHome
 
-# append to spark-env.sh
+# add spark to PATH
+sudo sed -i 's#PATH=.*#PATH=$PATH:$sparkHome/bin:$HOME/.local/bin:$HOME/bin#' \
+  $HOME/.bash_profile
+cd $HOME
+. ./.bash_profile
+
+echo ""
+echo ""
+echo "#append to spark-env.sh"
 sudo sed -e "$ a \ " \
 -e "$ a \
 # contents of conf/spark-env.sh \n\
@@ -26,25 +37,37 @@ export SPARK_WORKER_CORES=8" \
   > $sparkHome/conf/spark-env.sh
 
 # append to slave
-cp $sparkPath\conf/slaves.template    $sparkPath\conf/slaves
-
 sudo sed -e "$ a \ " \
 -e "$ a \
 # contents of conf/slaves \n\
-10.0.0.6 \n\
-10.0.0.6 \n\
-10.0.0.6 " \
-  $sparkPath\conf/slaves.template \
-  $sparkPath\conf/slaves
+${sparkWorkerIps[0]} \n\
+${sparkWorkerIps[1]} \n\
+${sparkWorkerIps[2]} \n\
+${sparkWorkerIps[3]} " \
+  $sparkHome\conf/slaves.template \
+  $sparkHome\conf/slaves
 
-# add spark to PATH
-sparkPath="/usr/local/spark"
-sudo sed -i 's#PATH=.*#PATH=$PATH:$sparkPath/bin:$HOME/.local/bin:$HOME/bin#' \
-  $HOME/.bash_profile
-cd $HOME
-. ./.bash_profile
+echo ""
+echo ""
+echo "#setting up auto-starting spark cluster"
+sudo sed -i "$ a sh $sparkHome/sbin/start-all.sh" \
+  /etc/rc.d/rc.local
+sudo chmod +x /etc/rc.d/rc.local
+sudo systemctl enable rc-local
+# sudo systemctl start rc-local
 
+# write some output to concole
+echo ""
+echo ""
+echo ""
+echo ""
+java -version
+scala -version
+sed -n -e '/broker.id=.*/p' -e '/zookeeper.connect=.*/p' \
+  $kafkaHome/config/server.properties 
+echo $PATH
+echo ""
+echo $JAVA_HOME
 
-
-
-sh $sparkPath/sbin/start-all.sh
+sleep 5
+sudo systemctl start rc-local
