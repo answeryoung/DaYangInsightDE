@@ -13,7 +13,7 @@ echo ""
 echo "#get kafka"
 sleep 1
 kafkaHome="/usr/local/kafka"
-wget -c $kafka_bin_url -O - | tar -xz
+wget -c --tries=6 $kafka_bin_url -O - | tar -xz
 sudo mv kafka_*/ $kafkaHome
 
 echo ""

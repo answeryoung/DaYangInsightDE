@@ -12,7 +12,7 @@ echo ""
 echo ""
 echo "#get spark"
 sparkHome="/usr/local/spark"
-wget -c --tries=16 $spark_bin_url -O - | tar -xz
+wget -c --tries=6 $spark_bin_url -O - | tar -xz
 sudo mv spark-*/ $sparkHome
 
 echo ""
@@ -21,12 +21,13 @@ echo "#add spark to PATH"
 sudo sed -i "$ a \
   alias cdSpark='cd $sparkHome/'" \
   $HOME/.bashrc
+. ./.bashrc
 sudo sed -i '/export PATH/i\PATH=/usr/local/spark/bin:$PATH' \
   $HOME/.bash_profile
 cd $HOME
 . ./.bash_profile
 
-# you should already have this
+echo "# openssh: you should already have this"
 sudo yum install -y openssh
 
 echo ""                 
@@ -53,7 +54,7 @@ sudo sed -e "$ a \ " \
 # ${sparkWorkerIps[2]} \n\
 # ${sparkWorkerIps[3]} " \
 #   $sparkHome/conf/slaves.template \
-#   $sparkHome/conf/slaves
+#   > $sparkHome/conf/slaves
 #          
 # echo ""
 # echo ""       
@@ -71,8 +72,6 @@ echo ""
 echo ""
 java -version                      
 scala -version
-sed -n -e '/broker.id=.*/p' -e '/zookeeper.connect=.*/p' \
-  $kafkaHome/config/server.properties 
 echo $PATH                      
 echo ""
 echo $JAVA_HOME
