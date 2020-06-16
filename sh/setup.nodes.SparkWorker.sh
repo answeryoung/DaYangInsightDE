@@ -55,15 +55,26 @@ sudo sed -e "$ a \ " \
 # ${sparkWorkerIps[3]} " \
 #   $sparkHome/conf/slaves.template \
 #   > $sparkHome/conf/slaves
-#          
+#
+
+echo ""
+echo ""
+echo "#get "
+pip3 install psycopg2==2.7.5
+pip3 install kafka-python
+
+# THIS MIGHT BE A BAD IDEA
 # echo ""
-# echo ""       
+# echo ""
 # echo "#setting up auto-starting spark cluster"
-# sudo sed -i "$ a # sh $sparkHome/sbin/start-all.sh" \
-#   /etc/rc.d/rc.local
+# sudo sed -i "$ a sh $sparkHome/sbin/start-all.sh" \
+#  /etc/rc.d/rc.local
 # sudo chmod +x /etc/rc.d/rc.local
 # sudo systemctl enable rc-local
-# # sudo systemctl start rc-local    
+# sudo systemctl start rc-local
+# THIS MIGHT BE A REALLY BAD IDEA 
+
+
 
 # write some output to concole      
 echo ""       

@@ -19,3 +19,20 @@ val linesWithSpark = textFile.filter(line => line.contains("Spark"))
 linesWithSpark.toDebugString
 
 
+import psycopg2 
+
+connection = psycopg2.connect(user = "power_user",
+    password = "66666666",
+    host = "10.0.0.4",
+    port = "5432",
+    database = "snowplow")
+
+    
+    
+    
+
+sudo userdel ec2User
+
+
+
+https://github.com/snowplow/snowplow/wiki/Setting-up-PostgreSQL#ec2

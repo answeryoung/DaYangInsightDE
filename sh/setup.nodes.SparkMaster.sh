@@ -58,12 +58,27 @@ ${sparkWorkerIps[3]} " \
 
 echo ""
 echo ""
-echo "#setting up auto-starting spark cluster"
-sudo sed -i "$ a # sh $sparkHome/sbin/start-all.sh" \
-  /etc/rc.d/rc.local
+echo "#get psycopg2, kafka-python, and boto3"
+# Do use the psycopg2-binary package. The following is the message from psycopg2.7.5
+# psycopg2/__init__.py:144: UserWarning: The psycopg2 wheel package will 
+# be renamed from release 2.8; in order to keep installing from binary please use
+# "pip install psycopg2-binary" instead.
+# For details see: <http://initd.org/psycopg/docs/install.html#binary-install-from-pypi>.                
+pip3 install psycopg2-binary
+pip3 install kafka-python
+pip3 install boto3
+
+# THIS MIGHT BE A BAD IDEA
+# echo ""
+# echo ""
+# echo "#setting up auto-starting spark cluster"
+# sudo sed -i "$ a sh $sparkHome/sbin/start-all.sh" \
+#  /etc/rc.d/rc.local
 # sudo chmod +x /etc/rc.d/rc.local
 # sudo systemctl enable rc-local
 # sudo systemctl start rc-local
+# THIS MIGHT BE A REALLY BAD IDEA
+
 
 # write some output to concole
 echo ""
