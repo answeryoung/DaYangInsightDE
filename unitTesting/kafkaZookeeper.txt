@@ -1,0 +1,26 @@
+## testings for a three-broker kafka cluster with a single zookerper node
+###start zookeeper node first then the brokers
+
+$zookeeper-shell.sh localhost:2181 ls /brokers/ids
+
+$kafka-topics.sh --create --bootstrap-server 10.0.0.7:9092,10.0.0.8:9092,10.0.0.9:9092 --topic test
+$kafka-topics.sh --describe --bootstrap-server 10.0.0.7:9092 --topic test
+
+$kafka-topics.sh --create --bootstrap-server 10.0.0.7:9092 --topic test2
+$kafka-topics.sh --describe --bootstrap-server 10.0.0.8:9092 --topic test2
+$kafka-topics.sh --list --bootstrap-server 10.0.0.7:9092
+
+$kafka-console-producer.sh --broker-list 10.0.0.7:9092,10.0.0.8:9092 --topic test 
+#### --broker-list should be replaced by --bootstrap-server in some distributions
+
+$kafka-console-consumer.sh --bootstrap-server 10.0.0.9:9092 --from-beginning --topic test
+#### note the messages are pushed to and pulled from different brokers
+
+## zookeeper and kafka are working well
+
+
+
+
+
+
+

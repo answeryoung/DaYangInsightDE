@@ -12,14 +12,22 @@ echo ""
 echo ""
 echo "#get spark"
 sparkHome="/usr/local/spark"
-wget -c $spark_bin_url -O - | tar -xz
+wget -c --tries=16 $spark_bin_url -O - | tar -xz
 sudo mv spark-*/ $sparkHome
 
-# add spark to PATH
-sudo sed -i 's#PATH=.*#PATH=$PATH:$sparkHome/bin:$HOME/.local/bin:$HOME/bin#' \
+echo ""
+echo ""
+echo "#add spark to PATH"
+sudo sed -i "$ a \
+  alias cdSpark='cd $sparkHome/'" \
+  $HOME/.bashrc
+sudo sed -i '/export PATH/i\PATH=/usr/local/spark/bin:$PATH' \
   $HOME/.bash_profile
 cd $HOME
 . ./.bash_profile
+
+# you should already have this
+sudo yum install -y openssh
 
 echo ""                 
 echo ""
@@ -27,12 +35,12 @@ echo "#append to spark-env.sh"
 sudo sed -e "$ a \ " \
 -e "$ a \
 # contents of conf/spark-env.sh \n\
-export SPARK_MASTER_HOST=$sparkMasterIp \n\
-export JAVA_HOME=$JAVA_HOME \n\
+# export SPARK_MASTER_HOST=$sparkMasterIp \n\
+# export JAVA_HOME=$JAVA_HOME \n\
 # For PySpark use \n\
-export PYSPARK_PYTHON=python3 \n\
+# export PYSPARK_PYTHON=python3 \n\
 # Oversubscription \n\
-export SPARK_WORKER_CORES=8" \
+# export SPARK_WORKER_CORES=8" \
   $sparkHome/conf/spark-env.sh.template \
   > $sparkHome/conf/spark-env.sh
 
@@ -50,7 +58,7 @@ export SPARK_WORKER_CORES=8" \
 # echo ""
 # echo ""       
 # echo "#setting up auto-starting spark cluster"
-# sudo sed -i "$ a sh $sparkHome/sbin/start-all.sh" \
+# sudo sed -i "$ a # sh $sparkHome/sbin/start-all.sh" \
 #   /etc/rc.d/rc.local
 # sudo chmod +x /etc/rc.d/rc.local
 # sudo systemctl enable rc-local

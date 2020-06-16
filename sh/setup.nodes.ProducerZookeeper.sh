@@ -28,7 +28,10 @@ sed -i "s#dataDir=.*#dataDir=$data_dir#" \
 echo ""
 echo ""
 echo "#add kafka to PATH"
-sudo sed -i 's#PATH=.*#PATH=$PATH:/usr/local/kafka/bin:$HOME/.local/bin:$HOME/bin#,0' \
+sudo sed -i "$ a \
+  alias cdKafka='cd $kafkaHome/'" \
+  $HOME/.bashrc
+sudo sed -i '/export PATH/i\PATH=/usr/local/kafka/bin:$PATH' \
   $HOME/.bash_profile
 cd $HOME
 . ./.bash_profile
