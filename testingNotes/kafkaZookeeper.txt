@@ -7,7 +7,9 @@ $ kafka-topics.sh --create --bootstrap-server \
 $   {kafkaIps[0]}:$kafkaPort,{kafkaIps[1]}:$kafkaPort,{kafkaIps[2]}:$kafkaPort --topic test
 $ kafka-topics.sh --create --zookeeper localhost:2181 \
 $    --topic test1 --partitions 1 --replication-factor 3 
+
 $ kafka-topics.sh --describe --bootstrap-server ${kafkaIps[0]}:$kafkaPort --topic test
+$ kafka-topics.sh --describe --zookeeper localhost:2181
 
 $ kafka-topics.sh --create --bootstrap-server ${kafkaIps[0]}:$kafkaPort --topic test2
 $ kafka-topics.sh --describe --bootstrap-server ${kafkaIps[1]}:$kafkaPort --topic test2
