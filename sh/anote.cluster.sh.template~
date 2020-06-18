@@ -16,7 +16,7 @@ export kafkaPort=$9092
 #echo ${kafkaIps[0]} 
 
 # spark cluster
-export sparkMasterIp="10.0.0.$spm"
+export sparkMasterIp="$sparkMasterIp"
 declare -A sparkWorkerIps
 sparkWorkerIps[0]="10.0.0.$sw0"
 sparkWorkerIps[1]="10.0.0.$sw1"
