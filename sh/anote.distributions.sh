@@ -8,6 +8,7 @@ export java_dist=java-1.8.0-openjdk
 export java_dist_ubuntu=openjdk-8-jdk
 export javaHome="/usr/lib/jvm/java-1.8.0-openjdk-1.8.0.252.b09-2.amzn2.0.1.x86_64/jre"
 export javaHome_ubuntu="/usr/lib/jvm/java-8-openjdk-amd64/jre"
+
 # $file $(which java)
 # /usr/bin/java: symbolic link to `/etc/alternatives/java'
 # $file /etc/alternatives/java

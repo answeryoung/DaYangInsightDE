@@ -1,13 +1,15 @@
 cdSpark
 sh sbin/start-all.sh
 # you should see messages about all the works' ips
-# I have webui-port:8080 spark://10.0.0.10:7077
-# http://ec2-54-214-189-162.us-west-2.compute.amazonaws.com:8080/
+# I have webui-port:8080 spark://$sparkMasterIp:7077
+# http://ec2-$sparkMasterIps_dashed.$aws_region_dashed.compute.amazonaws.com:8080/
 # link will work if the 8080 port is open to your ip
 # It displys all the workers on your cluster
 
 spark-shell
-# http://ec2-54-214-189-162.us-west-2.compute.amazonaws.com:4040/ should be up
+# http://ec2-$sparkMasterIps_dashed.$aws_region_dashed.compute.amazonaws.com:4040/
+should be up
+
 sc.setLogLevel("DEBUG")
 ## "ALL" "DEBUG" "ERROR" "FATAL" "TRACE" "WARN" "INFO" "OFF"
 sc.version
@@ -17,22 +19,3 @@ val x = sc.parallelize(1 to 1000)
 val textFile = sc.textFile("README.md") 
 val linesWithSpark = textFile.filter(line => line.contains("Spark"))
 linesWithSpark.toDebugString
-
-
-import psycopg2 
-
-connection = psycopg2.connect(user = "power_user",
-    password = "66666666",
-    host = "10.0.0.4",
-    port = "5432",
-    database = "snowplow")
-
-    
-    
-    
-
-sudo userdel ec2User
-
-
-
-https://github.com/snowplow/snowplow/wiki/Setting-up-PostgreSQL#ec2
