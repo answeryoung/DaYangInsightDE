@@ -12,9 +12,9 @@ echo ""
 echo ""
 echo "#get kafka"
 sleep 1
-kafkaHome="/usr/local/kafka"
+kafkaHome="~/kafka"
 wget -c --tries=6 $kafka_bin_url -O - | tar -xz
-sudo mv kafka_*/ $kafkaHome
+sudo mv kafka_* $kafkaHome
 
 echo ""
 echo ""
@@ -28,6 +28,12 @@ sed -i "s#dataDir=.*#dataDir=$data_dir#" \
 echo ""
 echo ""
 echo "#add kafka to PATH"
+
+sudo sed -i -e '/# User specific environment.*/i\if [ -f ~/sh/anote.cluster.sh ]; then' \
+  -e '/# User specific environment.*/i\        . ~/sh/anote.cluster.sh' \
+  -e '/# User specific environment.*/i\fi' \
+  $HOME/.bash_profile
+  
 sudo sed -i "$ a \
   alias cdKafka='cd $kafkaHome/'" \
   $HOME/.bashrc
@@ -42,15 +48,15 @@ echo "#get kafka-python and babo3"
 pip3 install kafka-python
 pip3 install boto3
 
-echo ""
-echo ""
-echo "#setting up auto-starting zookeeper"
-sudo sed -i "$ a $kafkaHome/bin/zookeeper-server-start.sh -daemon \
-  $kafkaHome/config/zookeeper.properties" \
-  /etc/rc.d/rc.local
-sudo chmod +x /etc/rc.d/rc.local
-sudo systemctl enable rc-local
-sudo systemctl start rc-local
+# echo ""
+# echo ""
+# echo "#setting up auto-starting zookeeper"
+# sudo sed -i "$ a $kafkaHome/bin/zookeeper-server-start.sh -daemon \
+#   $kafkaHome/config/zookeeper.properties" \
+#   /etc/rc.d/rc.local
+# sudo chmod +x /etc/rc.d/rc.local
+# sudo systemctl enable rc-local
+# sudo systemctl start rc-local
   
 # write some output to concole
 echo ""
@@ -64,3 +70,5 @@ sed -n '/dataDir=.*/p' $kafkaHome/config/zookeeper.properties
 echo $PATH
 echo ""
 echo $JAVA_HOME
+$kafkaHome/bin/zookeeper-server-start.sh -daemon \
+  $kafkaHome/config/zookeeper.properties
