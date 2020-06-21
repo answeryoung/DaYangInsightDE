@@ -52,15 +52,15 @@ sudo sed -i '/export PATH/i\PATH=/usr/local/kafka/bin:$PATH' \
 cd $HOME
 . ./.bash_profile
 
-echo ""
-echo ""
-echo "#setting up auto-starting kafka"
-sudo sed -i "$ a sudo sh $kafkaHome/bin/kafka-server-start.sh -daemon \
-  $kafkaHome/config/server.properties" \
-  /etc/rc.d/rc.local
-sudo chmod +x /etc/rc.d/rc.local
-sudo systemctl enable rc-local
-sudo systemctl start rc-local
+# echo ""
+# echo ""
+# echo "#setting up auto-starting kafka"
+# sudo sed -i "$ a sudo sh $kafkaHome/bin/kafka-server-start.sh -daemon \
+#   $kafkaHome/config/server.properties" \
+#   /etc/rc.d/rc.local
+# sudo chmod +x /etc/rc.d/rc.local
+# sudo systemctl enable rc-local
+# sudo systemctl start rc-local
 
 # write some output to concole
 echo ""
@@ -74,3 +74,6 @@ sed -n -e '/broker.id=.*/p' -e '/zookeeper.connect=.*/p' \
 echo $PATH
 echo ""
 echo $JAVA_HOME
+
+$kafkaHome/bin/kafka-server-start.sh -daemon \
+  $kafkaHome/config/server.properties
