@@ -26,7 +26,10 @@ $ kafka-console-consumer.sh --bootstrap-server ${kafkaIps[2]}:$kafkaPort \
 ## zookeeper and kafka are working well
 
 
-
+ps -ef | grep kafka
+kafka-server-start.sh -daemon /usr/local/kafka/config/server.properties
+sudo systemctl restart rc-local
+sudo sh /usr/local/kafka/bin/kafka-server-start.sh -daemon /usr/local/kafka/config/server.properties
 
 
 

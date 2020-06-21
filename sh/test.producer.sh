@@ -1,2 +1,4 @@
 #!/bin/sh
-python3 $test_producer.py '10.0.0.8:9092' 'test.csv' 'test'
+. ~/sh/anote.cluster.sh  
+python3 ~/src/test_producer.py $bucketName 'test.csv' \
+  "${kafkaIps[0]}:$kafkaPort" 'test'

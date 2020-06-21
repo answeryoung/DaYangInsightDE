@@ -13,7 +13,7 @@ sh setup.getDevTools.sh
 echo ""
 echo ""
 echo "#get kafka"
-kafkaHome="/usr/local/kafka"
+kafkaHome="~/kafka"
 wget -c --tries=6 $kafka_bin_url -O - | tar -xz
 sudo mv kafka_*/ $kafkaHome
 
@@ -38,9 +38,15 @@ sed -i -e '/min.insync.replicas=.*/a\default.replication.factor=2' \
 echo ""
 echo ""
 echo "#add kafka to PATH"
+sudo sed -i -e '/# User specific environment.*/i\if [ -f ~/sh/anote.cluster.sh ]; then' \
+  -e '/# User specific environment.*/i\        . ~/sh/anote.cluster.sh' \
+  -e '/# User specific environment.*/i\fi' \
+  $HOME/.bash_profile
+  
 sudo sed -i "$ a \
   alias cdKafka='cd $kafkaHome/'" \
   $HOME/.bashrc
+  
 sudo sed -i '/export PATH/i\PATH=/usr/local/kafka/bin:$PATH' \
   $HOME/.bash_profile
 cd $HOME
@@ -49,7 +55,7 @@ cd $HOME
 echo ""
 echo ""
 echo "#setting up auto-starting kafka"
-sudo sed -i "$ a $kafkaHome/bin/kafka-server-start.sh -daemon \
+sudo sed -i "$ a sudo sh $kafkaHome/bin/kafka-server-start.sh -daemon \
   $kafkaHome/config/server.properties" \
   /etc/rc.d/rc.local
 sudo chmod +x /etc/rc.d/rc.local

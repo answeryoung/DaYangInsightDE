@@ -1,9 +1,12 @@
 #!/bin/sh
 # copy to anote.cluster.sh
 # fill in the values according to your set-up
-# DY200614
+# DY200621
 
-# zookeeper 
+# bucket
+export bucketName='your-s3-bucket-name'
+
+# zookeeper
 export zookeeperIp="0.0.0.0"
 export zookeeperPort=0000 # the default 2181
 # kafka broker
@@ -22,7 +25,7 @@ sparkWorkerIps[1]="0.0.0.0"
 sparkWorkerIps[2]="0.0.0.0"
 sparkWorkerIps[3]="0.0.0.0"
 export sparkWorkerIps
-# the default 4040
+export sparkPort=0000 # the default 7077
 
 # postgreSQL
 export psqlIp="0.0.0.0"
