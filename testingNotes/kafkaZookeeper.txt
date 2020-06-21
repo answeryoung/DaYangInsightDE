@@ -1,7 +1,7 @@
 ## testings for a three-broker kafka cluster with a single zookerper node
 ###start zookeeper node first then the brokers
 
-$zookeeper-shell.sh localhost:$zookeeperPort ls /brokers/ids
+$ zookeeper-shell.sh localhost:$zookeeperPort ls /brokers/ids
 
 $ kafka-topics.sh --create --bootstrap-server \
 $   {kafkaIps[0]}:$kafkaPort,{kafkaIps[1]}:$kafkaPort,{kafkaIps[2]}:$kafkaPort --topic test
@@ -31,6 +31,43 @@ kafka-server-start.sh -daemon /usr/local/kafka/config/server.properties
 sudo systemctl restart rc-local
 sudo sh /usr/local/kafka/bin/kafka-server-start.sh -daemon /usr/local/kafka/config/server.properties
 
+# kafka server configerations
+https://www.ibm.com/support/knowledgecenter/SSPFMY_1.3.6/com.ibm.scala.doc/config/iwa_cnf_scldc_kfk_prp_exmpl_c.html
+https://kafka.apache.org/082/documentation.html
+https://docs.cloudera.com/documentation/kafka/latest/topics/kafka_performance.html
+https://ibmstreams.github.io/streamsx.kafka/docs/user/ConsumingBigMessages/#:~:text=Relevant%20Kafka%20consumer%20configs,-fetch.max.bytes&text=The%20default%20value%20is%2052%2C428%2C800%20(50MB)%20and%20may%20be%20sufficient.&text=The%20maximum%20amount%20of%20(potentially%20compressed)%20data%20per%2Dpartition,plus%20some%20overhead%20(1KB).
 
+socket.send.buffer.bytes=524288
+socket.receive.buffer.bytes=524288
+socket.request.max.bytes=104857600
+queued.max.requests=16
+fetch.purgatory.purge.interval.requests=100
+producer.purgatory.purge.interval.requests=100
+
+
+
+
+offsets.topic.num.partitions=50
+offsets.topic.replication.factor=3
+transaction.state.log.replication.factor=1
+transaction.state.log.min.isr=1
+min.insync.replicas=1
+default.replication.factor=2
+
+log.retention.hours=24
+
+replica.high.watermark.checkpoint.interval.ms=1000
+
+
+
+# consumer settings
+fetch.max.bytes=52428800
+max.partition.fetch.bytes=2097152
+max.poll.records=50 
+
+# Tuning Kafka Producers
+Batch Size
+
+linger.ms
 
 

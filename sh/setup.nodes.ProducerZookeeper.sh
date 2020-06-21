@@ -25,7 +25,7 @@ mkdir $data_dir
 sed -i "s#dataDir=.*#dataDir=$data_dir#" \
   $kafkaHome/config/zookeeper.properties
 
-echo ""
+echo ""    
 echo ""
 echo "#add kafka to PATH"
 
@@ -48,15 +48,15 @@ echo "#get kafka-python and babo3"
 pip3 install kafka-python
 pip3 install boto3
 
-# echo ""
-# echo ""
-# echo "#setting up auto-starting zookeeper"
-# sudo sed -i "$ a $kafkaHome/bin/zookeeper-server-start.sh -daemon \
-#   $kafkaHome/config/zookeeper.properties" \
-#   /etc/rc.d/rc.local
-# sudo chmod +x /etc/rc.d/rc.local
-# sudo systemctl enable rc-local
-# sudo systemctl start rc-local
+echo ""
+echo ""
+echo "#setting up auto-starting zookeeper"
+sudo sed -i "$ a $kafkaHome/bin/zookeeper-server-start.sh -daemon \
+  $kafkaHome/config/zookeeper.properties" \
+  /etc/rc.d/rc.local
+sudo chmod +x /etc/rc.d/rc.local
+sudo systemctl enable rc-local
+sudo systemctl start rc-local
   
 # write some output to concole
 echo ""
@@ -70,5 +70,5 @@ sed -n '/dataDir=.*/p' $kafkaHome/config/zookeeper.properties
 echo $PATH
 echo ""
 echo $JAVA_HOME
-$kafkaHome/bin/zookeeper-server-start.sh -daemon \
-  $kafkaHome/config/zookeeper.properties
+# $kafkaHome/bin/zookeeper-server-start.sh -daemon \
+#   $kafkaHome/config/zookeeper.properties
