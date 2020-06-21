@@ -1,3 +1,4 @@
 .local/*
-sh\anote.cluster.sh
+sh/anote.cluster.sh
 *~*
+sh\anote.cluster.sh

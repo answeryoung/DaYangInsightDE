@@ -12,7 +12,7 @@ echo ""
 echo ""
 echo "#get kafka"
 sleep 1
-kafkaHome="~/kafka"
+kafkaHome="$HOME/kafka"
 wget -c --tries=6 $kafka_bin_url -O - | tar -xz
 sudo mv kafka_* $kafkaHome
 
@@ -37,7 +37,7 @@ sudo sed -i -e '/# User specific environment.*/i\if [ -f ~/sh/anote.cluster.sh ]
 sudo sed -i "$ a \
   alias cdKafka='cd $kafkaHome/'" \
   $HOME/.bashrc
-sudo sed -i '/export PATH/i\PATH=/usr/local/kafka/bin:$PATH' \
+sudo sed -i '/export PATH/i\PATH=$HOME/kafka/bin:$PATH' \
   $HOME/.bash_profile
 cd $HOME
 . ./.bash_profile

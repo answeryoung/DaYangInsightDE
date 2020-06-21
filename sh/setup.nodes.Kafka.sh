@@ -13,9 +13,9 @@ sh setup.getDevTools.sh
 echo ""
 echo ""
 echo "#get kafka"
-kafkaHome="~/kafka"
+kafkaHome="$HOME/kafka"
 wget -c --tries=6 $kafka_bin_url -O - | tar -xz
-sudo mv kafka_* $kafkaHome
+sudo mv kafka_*/ $kafkaHome
 
 echo ""
 echo ""
@@ -31,7 +31,7 @@ sed -i -e "s/broker.id=.*/broker.id=$broker_id/g" \
   -e '/transaction.state.log.min.isr=.*/a\min.insync.replicas=2' \
   $kafkaHome/config/server.properties
 sed -i -e '/min.insync.replicas=.*/a\default.replication.factor=2' \
-  -e 's/log.retention.hours=.*/log.retention.hours=4/g' \
+  -e 's/log.retention.hours=.*/log.retention.hours=24/g' \
   -e "s/zookeeper.connect=.*/zookeeper.connect=${zookeeperIp}:${zookeeperPort}/g"  \
   $kafkaHome/config/server.properties    
 
@@ -48,7 +48,7 @@ sudo sed -i "$ a \
   alias cdKafka='cd $kafkaHome/'" \
   $HOME/.bashrc
   
-sudo sed -i '/export PATH/i\PATH=/usr/local/kafka/bin:$PATH' \
+sudo sed -i '/export PATH/i\PATH=$HOME/kafka/bin:$PATH' \
   $HOME/.bash_profile
 cd $HOME
 . ./.bash_profile
