@@ -18,6 +18,12 @@ sudo mv spark-*/ $sparkHome
 echo ""
 echo ""
 echo "#add spark to PATH"
+
+sudo sed -i -e '/# User specific environment.*/i\if [ -f ~/sh/anote.cluster.sh ]; then' \
+  -e '/# User specific environment.*/i\        . ~/sh/anote.cluster.sh' \
+  -e '/# User specific environment.*/i\fi' \
+  $HOME/.bash_profile
+  
 sudo sed -i "$ a \
   alias cdSpark='cd $sparkHome/'" \
   $HOME/.bashrc
@@ -79,6 +85,21 @@ pip3 install boto3
 # sudo systemctl start rc-local
 # THIS MIGHT BE A REALLY BAD IDEA
 
+# It's not a bad idea to get a copy of kafka on this node.
+# It could be useful for checking the connections to brokers.
+echo "#get kafka"
+kafkaHome="$HOME/kafka"   
+wget -c --tries=6 $kafka_bin_url -O - | tar -xz
+sudo mv kafka_*/ $kafkaHome
+
+sudo sed -i "$ a \
+  alias cdKafka='cd $kafkaHome/'" \
+  $HOME/.bashrc              
+  
+sudo sed -i '/export PATH/i\PATH=$HOME/kafka/bin:$PATH' \
+  $HOME/.bash_profile
+cd $HOME
+. ./.bash_profile 
 
 # write some output to concole
 echo ""

@@ -21,7 +21,10 @@ $ kafka-console-producer.sh --broker-list ${kafkaIps[0]}:$kafkaPort,${kafkaIps[1
 
 $ kafka-console-consumer.sh --bootstrap-server ${kafkaIps[2]}:$kafkaPort \
     --from-beginning --topic test
-#### note the messages are pushed to and pulled from different brokers
+#### note the messages are pushed to and pulled from different brokers here to test if replication works
+
+$ kafka-topics.sh --zookeeper $zookeeperIp:$zookeeperPort \ 
+$   --delete --topic $topic
 
 ## zookeeper and kafka are working well
 
@@ -64,6 +67,12 @@ replica.high.watermark.checkpoint.interval.ms=1000
 fetch.max.bytes=52428800
 max.partition.fetch.bytes=2097152
 max.poll.records=50 
+
+
+
+
+
+
 
 # Tuning Kafka Producers
 Batch Size

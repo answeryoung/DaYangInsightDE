@@ -1,5 +1,5 @@
 #!/bin/sh
-topic=test03
+topic=test03b
 . ~/sh/anote.cluster.sh
 # kafka-topics.sh --create --zookeeper localhost:2181 \
 #   --topic $topic --partitions 3 --replication-factor 2

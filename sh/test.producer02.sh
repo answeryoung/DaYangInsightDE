@@ -1,4 +1,7 @@
 #!/bin/sh
-. ~/sh/anote.cluster.sh  
-python3 ~/src/test_producer02.py $bucketName 'ecg-data-test.json' \
-  "${kafkaIps[0]}:$kafkaPort"  8192  
+topic=test02
+. ~/sh/anote.cluster.sh
+kafka-topics.sh --create --zookeeper localhost:2181 \
+  --topic $topic --partitions 3 --replication-factor 2
+python3 ~/src/test_producer02.py $bucketName 'ecg-data-g500.json' \
+  "${kafkaIps[2]}:$kafkaPort" $topic

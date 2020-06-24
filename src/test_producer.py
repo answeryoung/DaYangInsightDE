@@ -31,5 +31,7 @@ for line in lines:
 #     producer.flush()
 #     print(line)
     nLine += 1
+    if nLine % 5000 == 0:
+        print('  '+ str(nLine) +' lines produced...')
 print(Topic)
-print(str(nLine)+' lines produced')
+print(str(nLine)+' lines produced.')
