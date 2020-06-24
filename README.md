@@ -10,11 +10,11 @@ The goal is near real-time processing and forwarding electrocardiography (ECG or
 
 ## Approach
 A simulated real-time data source, based on an existing dataset that contains ECG data, is used.  The original data are continuous ECG waves that are break into small segments. These segments are packaged in the json format. Each json structure is produced as a message and sent to a Kafka cluster. A Spark cluster subscribes to the Kafka cluster and extract features from the data received. For the current project, the time locations of the P T and QRS peaks are the only features being extracted (see figure below).
-![architecture]( https://i.pinimg.com/originals/2b/c4/68/2bc468ca7a012a8bb595e55607bb1a0f.jpg)
+![ecg-signal]( https://i.pinimg.com/originals/2b/c4/68/2bc468ca7a012a8bb595e55607bb1a0f.jpg)
 The signal segment, along with features extracted, is put in a PostgreSQL database. Near-live queries are run behind a tableau dashboard.
 
 ## Pipeline
- ![Pipeline]( https://i.pinimg.com/originals/2b/c4/68/2bc468ca7a012a8bb595e55607bb1a0f.jpg)
+ ![Pipeline](.png/Architecture.png)
 1.	There are 7,511 simulated patients, with their ECG data stored as 7,511 json objects in an AWS S3 Bucket. In each json object (“file”), there are many separate json structures with identical schema. Each structure contains the signal of one R-peak-to-R-peak heartbeat. The typical size of the structures is 3 kB. 
 2.	Kafka-python producer programs are run on EC2 instances. Those producer programs send those structures as messages to a three-broker Kafka cluster. The data from one subject is published to one Kafka topic, and vice versa.
 3.	Spark subscribe to a “pattern” of topics from the Kafka cluster and consume the data received as a direct stream. For each segment of ECG signals P, T, Q, and S are time-wise located. Then, all together put into a database managed by PostgreSQL.
