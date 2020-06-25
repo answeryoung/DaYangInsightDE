@@ -31,4 +31,4 @@ The Kafka would occasionally lose over half the messages sent by the producer pr
 Many QRS analysis algorithms have been developed since the invention of the ECG machine over a century ago. Those algorithms are developed for signal segments with R peak in the middle. The precision resulted in this project is not ideal.
 
 ## Data Source
-The data source used in this project is created based on an existing data set available from PhysioNet.org. A description of the original dataset and of preparing the data source is given in [preprocessing/ README.md]( preprocessing/ README.md).
+The data source used in this project is created based on an existing data set available from PhysioNet.org. A description of the original dataset and of preparing the data source is given in [preprocessing/README.md]( preprocessing/README.md).
