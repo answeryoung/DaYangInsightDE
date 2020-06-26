@@ -10,5 +10,5 @@ The files was downloaded to an EC-2 instance with a 240 GB storage attached. The
     wget -r -N -c -np https://physionet.org/files/cves/1.0.0/
 
 ## Data Pre-processing for This Project
-The .json files are created using [Preprocessing2.py](Preprocessing2.py)
-Overall, the set of .json files is data set suited to simulate a data stream of identical schema at a frequency of up to 10,000 messages per second and a speed of up to 250 Mbps.
+The .json files were created using [Preprocessing2.py](Preprocessing2.py)
+Overall, the set of .json files is a data set suited to simulate a data stream of identical schema at a frequency of up to 10,000 messages per second and a speed of up to 250 Mbps.
