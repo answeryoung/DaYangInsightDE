@@ -2,6 +2,7 @@
 # This program creates json files from the ecg data in the dataset described
 # in the README.md.
 #
+# wfdb package is requied.
 # An output is a python dictionary, Odict with schema described below.
 #
 # Odict['topic']
