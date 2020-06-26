@@ -1,8 +1,8 @@
 ################################################################################
-# This program create json datasets from the ecg data in the dataset described
+# This program creates json datasets from the ecg data in the dataset described
 # in the README.md.
 #
-# An output is a python dictionary, Odict with schema described below
+# An output is a python dictionary, Odict with schema described below.
 #
 # Odict['topic']
 # Odict['record_Meta']['name']
