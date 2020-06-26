@@ -115,18 +115,9 @@ def main():
     print('Max Sample length is '+str(max_signal_length)+' elements')
     return
 
-#######################################################################
-#
+################################################################################
 # Utility functions
-#######################################################################
-def mk_topic(idx):
-    topic = 'ecg-'+str(idx).zfill(6)
-    print(topic)
-    return topic
-
-
-
-
+################################################################################
 def set_prominence_thd(signal_segment, record):
     ptp_value       = np.ptp(signal_segment)
     subwindow_width = 3*record.fs # 3 second window
