@@ -16,7 +16,7 @@ Each measurement is break into pieces.
 Each piece has about 15 min. worth of ECG signals, and is considered as a patient for this data source.
 Each of those 15 min. pieces is further dived into segments, each of which corresponds to R-peak-to-R-peak heartbeat.
 Each segment is wrapped in json structure and stored, with other segments from the patient, in a .json file.
-This is done by [Preprocessing2.py]( Preprocessing2.py).
+This is done by [Preprocessing.py]( Preprocessing.py).
 
 Overall, the set of .json files is a data set suited to simulate a data stream of identical schema at a frequency of up to 10,000 messages per second and a speed of up to 250 Mbps.
 When my algorithm didn't find an R-peak in a long segment from a 15 min. piece of signal, the signal is written as something like `"[1355 1353 1340 ... 1239 1278 1301]"`.

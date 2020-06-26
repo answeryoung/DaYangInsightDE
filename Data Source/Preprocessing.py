@@ -1,3 +1,10 @@
+################################################################################
+# This program create json datasets from the ecg data in the dataset described
+# in the README.md.
+#
+# DY200626
+################################################################################
+
 import os
 import sys
 import csv
@@ -7,13 +14,16 @@ import numpy as np
 from scipy.signal import find_peaks
 import wfdb
 
+# to keep messages below about 10 kB
+np.set_printoptions(threshold=3000)
 
 data_dir = 'ecg-data/'
 subject_meta_path = 'ecg-data/subjects.csv'
 
-output_json_name = 'ecg-data-g.json'
+output_dir   = 'ecg/'
+topic_header = 'ecg-'
 
-targetHR = 220;
+targetHR     = 220;
 sample_length     = 15*60; # seconds, target sample length
 min_sample_lenght = 30; # seconds
 channel_of_interest = 0;
@@ -55,9 +65,9 @@ def main():
                 nWindow      = int(nWindow)
 
             for w in range(nWindow):
-                topic      = mk_topic(topic_idx) # each 15 min segment is a topic
+# each 15 min segment is a topic
+                topic           = topic_header + str(topic_idx).zfill(6)
                 topic_idx += 1
-
                 signal          = signal_whole[(w*window_width):((w+1)*window_width)]
                 prominence_thd  = set_prominence_thd(signal, record)
                 peaks, _        = find_peaks( signal, prominence=prominence_thd
@@ -69,7 +79,7 @@ def main():
                     continue
 
                 sample = signal[0:peaks[0]]
-                dump_to_json( output_json_name, topic, record, w
+                dump_to_json( topic, output_dir, record, w
                             , subjects, 0, -nPeaks-1, sample, 0)
                 if len(sample) > max_signal_length:
                     max_signal_length = len(sample);
@@ -81,7 +91,7 @@ def main():
                     else:
                         sample = signal[peaks[p]:-1]
                     time_s = peaks[p]/record.fs
-                    dump_to_json( output_json_name, topic, record, w
+                    dump_to_json( topic, output_dir, record, w
                                 , subjects, idx, idx_neg, sample, time_s)
                     if len(sample) > max_signal_length:
                         max_signal_length = len(sample)
@@ -171,9 +181,10 @@ def get_subjects_metadata():
 
 
 
-def dump_to_json( output_file_name, topic, record, window, subjects, idx, idx_neg, signal_segment, time_s):
+def dump_to_json( topic, output_dir, record, window, subjects, idx, idx_neg, signal_segment, time_s):
     Odict = {}
     Odict['topic'] = topic
+    json_path      = output_dir+topic+'.json'
 
     Odict['record_Meta'] = {}
     Odict['record_Meta']['name']   = record.record_name
@@ -181,7 +192,7 @@ def dump_to_json( output_file_name, topic, record, window, subjects, idx, idx_ne
     Odict['segment_meta'] = {}
     Odict['segment_meta']['index']     = idx
     Odict['segment_meta']['index_neg'] = idx_neg
-    Odict['segment_meta']['segment_start_time_s'] = time_s 
+    Odict['segment_meta']['segment_start_time_s'] = time_s
 
     Odict['signal_meta'] = {}
     Odict['signal_meta']['signal'] = 'EKG'
@@ -205,7 +216,7 @@ def dump_to_json( output_file_name, topic, record, window, subjects, idx, idx_ne
                                     , formatter      = {'float_kind':lambda x: fmt % x})
     Odict['signal'] = signal_segment
 
-    with open(output_file_name, 'a+') as outfile:
+    with open(json_path, 'a+') as outfile:
         json.dump(Odict, outfile)
         outfile.write('\n')
 
@@ -222,7 +233,6 @@ def format_switch(bit_depth,fmt):
         return switcher[bit_depth]
     else:
         return "%.20"+fmt
-
 
 
 if __name__ == '__main__':
