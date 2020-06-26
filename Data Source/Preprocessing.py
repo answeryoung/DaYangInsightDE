@@ -2,6 +2,27 @@
 # This program create json datasets from the ecg data in the dataset described
 # in the README.md.
 #
+# An output is a python dictionary, Odict with schema described below
+#
+# Odict['topic']
+# Odict['record_Meta']['name']
+# Odict['segment_meta']['index']
+# Odict['segment_meta']['index_neg']
+# Odict['segment_meta']['segment_start_time_s']
+
+# Odict['signal_meta']['signal']
+# Odict['signal_meta']['window']
+# Odict['signal_meta']['frequency_Hz']
+# Odict['signal_meta']['unit']
+# Odict['signal_meta']['resolution_bit']
+# Odict['signal_meta']['check']
+#
+# Odict['subject_meta']['subject_number']
+# Odict['subject_meta']['subject_age']
+# Odict['subject_meta']['target_HR']
+#
+# Odict['signal'] = signal_segment
+#
 # DY200626
 ################################################################################
 
@@ -31,9 +52,6 @@ channel_of_interest = 0;
 subject_number_col_idx = 0
 subject_age_col_idx    = 5
 
-# max_signal_length = 0
-# topic_idx = 0
-# subjects  = get_measurements_info(data_dir)
 def main():
     topic_idx = 0
     max_signal_length = 0
@@ -48,7 +66,6 @@ def main():
             print('  '+ m)
             record       = wfdb.rdrecord(data_dir+m)
             signal_whole = record.p_signal[:,channel_of_interest]
-#            record.fs    = int(record.fs/2)
             if len(signal_whole) < min_sample_lenght*record.fs:
                 print('    '+ m +' is too short, skipping..')
                 continue
