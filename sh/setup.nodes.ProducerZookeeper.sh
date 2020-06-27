@@ -42,11 +42,6 @@ sudo sed -i '/export PATH/i\PATH=$HOME/kafka/bin:$PATH' \
 cd $HOME
 . ./.bash_profile
 
-echo ""
-echo ""
-echo "#get kafka-python and babo3"
-pip3 install kafka-python
-pip3 install boto3
 
 echo ""
 echo ""

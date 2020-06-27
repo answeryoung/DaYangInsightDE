@@ -23,10 +23,12 @@ consumer = KafkaConsumer( Topic, bootstrap_servers=bootstrapServer
 nMsg = 0 
 for msg in consumer:
     message = msg.value
+    i = message['segment_meta']['index']
     s = message['signal']
     a = np.array(s.strip("[]").split(' '))
     print(message['topic'] + ' : part: ' + str(msg.partition)
             + ', offset: ' + str(msg.offset) 
+            + ', idx: ' + str(i)
             + ', len: ' + str(a.size))
             
     

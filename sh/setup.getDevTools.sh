@@ -50,7 +50,14 @@ echo ""
 echo "#setup pip"
 sleep 1
 curl -O https://bootstrap.pypa.io/get-pip.py
-python3 get-pip.py  
+python3 get-pip.py
+
+echo ""
+echo ""
+echo "#get kafka-python, babo3 and boto3"
+pip3 install kafka-python
+pip3 install boto3
+pip3 install envbash
 
 echo ""
 echo ""

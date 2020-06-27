@@ -71,8 +71,6 @@ echo "#get psycopg2, kafka-python, and boto3"
 # "pip install psycopg2-binary" instead.
 # For details see: <http://initd.org/psycopg/docs/install.html#binary-install-from-pypi>.                
 pip3 install psycopg2-binary
-pip3 install kafka-python
-pip3 install boto3
 
 # THIS MIGHT BE A BAD IDEA
 # echo ""
