@@ -5,3 +5,5 @@ sh\anote.cluster.sh
 #*#
 testingNotes*
 *.swp
+.idea/*
+
