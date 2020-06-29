@@ -212,7 +212,9 @@ def process_signal(message,message_next):
     sig_b = message_next['signal']
     sig_b = np.array(sig_b.strip("[]").split(' '))
     
-    R_time_s    = message_next['segment_meta']['segment_start_time_s']
+    unit_time_s = 1/message['signal_meta']['frequency_Hz']
+    start_time_s= message['segment_meta']['segment_start_time_s']
+    
     if len(sig_a) == 7 and len(sig_b) == 7:
         time_pos    = { 'P': np.nan, 'Q': np.nan, 'R': np.nan
                       , 'S': np.nan, 'T': np.nan}
@@ -222,7 +224,34 @@ def process_signal(message,message_next):
         signal = sig_b.astype(np.float)
         time_pos    = { 'P': np.nan, 'Q': np.nan, 'R': 0
                       , 'S': 0, 'T': 0 }
-        time_intvl  = { 'PR': np.nan, 'QRS': np.nan, 'QT': 0}
+        time_intvl  = { 'PR': np.nan, 'QRS': np.nan, 'QT': np.nan}
+
+        
+        
+        ptp_range = np.ptp(signal)
+        R_loc     = 0
+        R_next_loc    = len(signal)
+
+        pks_neg, prop = find_peaks(-signal, prominence=0.02 * ptp_range)
+        try:
+            S_loc = pks_neg[pks_neg > R_loc][0]
+        except:
+            S_loc = np.int(R_loc + 0.02 / unit_time_s)
+
+        T_limit   = np.int(0.75 * (R_next_loc - R_loc) + R_loc)
+        T_seg     = sig_ab[S_loc:T_limit]
+        ptp_range = np.ptp(T_seg)
+        try:
+            pks_T, prop = find_peaks(T_seg, prominence=0.02 * ptp_range)
+            T_loc = pks_T[np.argmax(prop['prominences'])] + S_loc
+        except:
+            T_low_limit = np.int(0.2 * (R_next_loc - R_loc) + R_loc)
+            T_loc = np.int(T_low_limit + 0.15 / unit_time_s)
+
+        time_pos['R'] = message_next['segment_meta']['segment_start_time_s']
+        time_pos['S'] = time_pos['R'] + S_loc * unit_time_s
+        time_pos['T'] = time_pos['R'] + T_loc * unit_time_s
+   
         
     
     elif len(sig_b) == 7 or idx_neg == -1:
@@ -230,7 +259,31 @@ def process_signal(message,message_next):
         time_pos    = { 'P': 0, 'Q': 0, 'R': 0
                       , 'S': np.nan, 'T': np.nan}
         time_intvl  = { 'PR': 0, 'QRS': np.nan, 'QT': np.nan}
-    
+
+        ptp_range   = np.ptp(signal)
+        R_loc       = len(sig_a)
+
+        pks_neg, prop   = find_peaks(-sig_ab, prominence=0.02 * ptp_range)
+        try:
+            Q_loc = pks_neg[pks_neg < R_loc][-1]
+        except:
+            Q_loc = np.int(R_loc - 0.02 / unit_time_s)
+
+        P_limit = np.int(0.5 * R_loc)
+        P_seg   = sig_ab[P_limit:Q_loc]
+        ptp_range = np.ptp(P_seg)
+        try:
+            pks_P, prop = find_peaks(P_seg, prominence=0.01 * ptp_range)
+            P_loc = pks_P[np.argmax(prop['prominences'])] + P_limit
+        except:
+            P_loc = np.int(Q_loc - 0.1 / unit_time_s)
+
+        time_pos['P'] = start_time_s + P_loc * unit_time_s
+        time_pos['Q'] = start_time_s + Q_loc * unit_time_s
+        time_pos['R'] = start_time_s + R_loc * unit_time_s
+
+        time_intvl['PR']  = time_pos['R'] - time_pos['P']
+        
     else:
         signal = np.concatenate((sig_a, sig_b), axis=0)
         signal = signal.astype(np.float)
@@ -238,7 +291,50 @@ def process_signal(message,message_next):
             , 'S': 0, 'T': 0}
         time_intvl = {'PR': 0, 'QRS': 0, 'QT': 0}
 
-        peaks, _ = find_peaks(signal)
+        ptp_range   = np.ptp(signal)
+        R_loc       = len(signal)
+        R_next_loc  = len(signal)
+
+        pks_neg, prop = find_peaks(-signal, prominence=0.02 * ptp_range)
+        try:
+            Q_loc = pks_neg[pks_neg < R_loc][-1]
+        except:
+            Q_loc = np.int(R_loc - 0.02/unit_time_s)
+        
+        try:
+            S_loc = pks_neg[pks_neg > R_loc][0]
+        except:
+            S_loc = np.int(R_loc + 0.02/unit_time_s)
+    
+        
+        T_limit     = np.int(0.75 * (R_next_loc - R_loc) + R_loc)
+        T_seg       = signal[S_loc:T_limit]
+        ptp_range   = np.ptp(T_seg)
+        try:
+            pks_T, prop = find_peaks(T_seg, prominence=0.02 * ptp_range)
+            T_loc   = pks_T[np.argmax(prop['prominences'])] + S_loc
+        except:
+            T_low_limit = np.int(0.2 * (R_next_loc - R_loc) + R_loc)
+            T_loc       = np.int(T_low_limit + 0.15/unit_time_s)
+
+        P_limit     = np.int(0.5 * R_loc)
+        P_seg       = signal[P_limit:Q_loc]
+        ptp_range   = np.ptp(P_seg)
+        try:
+            pks_P, prop = find_peaks(P_seg, prominence=0.01 * ptp_range)
+            P_loc   = pks_P[np.argmax(prop['prominences'])]+P_limit
+        except:
+            P_loc   = np.int(Q_loc - 0.1 / unit_time_s)
+
+        time_pos['P'] = start_time_s + P_loc * unit_time_s
+        time_pos['Q'] = start_time_s + Q_loc * unit_time_s
+        time_pos['R'] = start_time_s + R_loc * unit_time_s
+        time_pos['S'] = start_time_s + S_loc * unit_time_s
+        time_pos['T'] = start_time_s + T_loc * unit_time_s
+
+        time_intvl['PR']  = time_pos['R'] - time_pos['P']
+        time_intvl['QRS'] = time_pos['S'] - time_pos['R']
+        time_intvl['QT']  = time_pos['T'] - time_pos['Q']
         
     message['time_pos'] = time_pos
     message['time_pos'] = time_intvl
