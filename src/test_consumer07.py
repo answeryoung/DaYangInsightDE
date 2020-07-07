@@ -1,5 +1,6 @@
 table_suffix = '_test07a'
 '''
+Fully parallelizable
 DY200706
 '''
 import sys
@@ -15,7 +16,7 @@ from datetime import datetime
 
 NaN = np.nan
 
-bootstrapServer = sys.argv[1]  # 10.0.0.7:9092
+bootstrapServer = sys.argv[1]
 log_file_path = sys.argv[2]
 topic_pattern = sys.argv[3]
 
@@ -144,9 +145,10 @@ def main():
 
 ################################################################################
 def create_measurements_table(conn, summary_table):
-    sql_create_measurements_table = """
-        DROP TABLE IF EXISTS %s;
-        CREATE TABLE %s (
+    s1 = "DROP TABLE IF EXISTS % s; CREATE TABLE %s " % (summary_table, summary_table)
+    s2 = "CREATE TABLE IF NOT EXISTS %s " % summary_table
+    sql_create_measurements_table = s2 + \
+        """ (
               topic VARCHAR (32) PRIMARY KEY
             , patient_id VARCHAR (32)
             , patient_age NUMERIC (6,3)
@@ -163,27 +165,7 @@ def create_measurements_table(conn, summary_table):
             , signal_length_s NUMERIC (12,4)
             , signal_whole NUMERIC (16) []
             , metadata JSON
-        );""" % (summary_table, summary_table)
-    
-    # sql_create_measurements_table = """
-    #     CREATE TABLE IF NOT EXISTS %s (
-    #           topic VARCHAR (32) PRIMARY KEY
-    #         , patient_id VARCHAR (32)
-    #         , patient_age NUMERIC (6,3)
-    #         , target_HR NUMERIC (6,3)
-    #         , measurement_datetime VARCHAR (32)
-    #         , number_of_segments INT
-    #         , PR_s NUMERIC (6,4)
-    #         , PR_s_dist NUMERIC (6,4) []
-    #         , QRS_s NUMERIC (6,4)
-    #         , QRS_dist NUMERIC (6,4) []
-    #         , QT_s NUMERIC (6,4)
-    #         , QT_dist NUMERIC (6,4) []
-    #         , sampling_frequency_Hz NUMERIC (6,2)
-    #         , signal_length_s NUMERIC (12,4)
-    #         , signal_whole NUMERIC (16) []
-    #         , metadata JSON
-    #     );""" % (summary_table)
+        );"""
     
     cur = conn.cursor()
     cur.execute(sql_create_measurements_table)
@@ -345,34 +327,6 @@ def insert_data(conn, message, summary_table):
                                  , segment_signal
                                  , Json(message)
                                  ))
-    
-    # if idx == 0:
-    #     patient_age = message['subject_meta']['subject_age']
-    #     target_HR   = message['subject_meta']['target_HR']
-    #     message['subject_meta'].pop('subject_age')
-    #     message['subject_meta'].pop('target_HR')
-    #
-    #     sql_insert_measurements = ("""
-    #         INSERT INTO %s (
-    #               topic
-    #             , patient_id
-    #             , patient_age
-    #             , target_HR
-    #             , measurement_datetime
-    #             , sampling_frequency_Hz
-    #             , metadata
-    #         ) VALUES ( %%s
-    #         """ + ', %%s'*6 + ' );') % summary_table
-    #
-    #     cur.execute(sql_insert_measurements,  ( topic
-    #                                           , patient_id
-    #                                           , patient_age
-    #                                           , target_HR
-    #                                           , measurement_datetime
-    #                                           , sampling_frequency_Hz
-    #                                           , Json(message)
-    #                                           ))
-    
     conn.commit()
     return conn
 
