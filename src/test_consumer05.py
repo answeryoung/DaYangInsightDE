@@ -24,11 +24,12 @@ nMsg = 0
 for msg in consumer:
     message = msg.value
     i = message['segment_meta']['index']
+    i_neg = message['segment_meta']['index_neg']  
     s = message['signal']
     a = np.array(s.strip("[]").split(' '))
     print(message['topic'] + ' : part: ' + str(msg.partition)
             + ', offset: ' + str(msg.offset) 
-            + ', idx: ' + str(i)
+            + ', idx: [' + str(i) + ', ' + str(i_neg),']'
             + ', len: ' + str(a.size))
             
     
