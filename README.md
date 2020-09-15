@@ -34,7 +34,7 @@ Then, all together, put into a database managed by PostgreSQL.
 The patient could certainly have access to the extracted features.
 
 ## Demo
-Yet to be made.
+[Youtube Link]( https://www.youtube.com/watch?v=HSC9m9Lz-PM)
 
 ## Challenges
 ### [x] Kafka-producer connection reliability
