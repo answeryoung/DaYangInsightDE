@@ -11,12 +11,14 @@ At the same time, these data are aggregated (data aggregation can be electively 
 ## Approach
 This pipeline is built for aggregating, enriching, and communicating these data.
 A simulated real-time data source, based on an existing dataset that contains ECG data, is used.
-The original data are continuous ECG waves that are break into small segments. These segments are packaged in the json format.
-Each json structure is produced as a message and sent to a Kafka cluster.
-A Spark cluster subscribes to the Kafka cluster and extract features from the data received.
+The original data are continuous ECG waves that are break into small (~15 min.) segments.
+These segments are packaged in the json format.
+Each json object is produced as a message and sent to a Kafka cluster.
+EC2 nodes subscribes to the Kafka cluster and extract features from the data received.
 For the current project, the time locations of the P T and QRS peaks are the only features being extracted (see figure below).  
-![architecture]( https://i.pinimg.com/originals/2b/c4/68/2bc468ca7a012a8bb595e55607bb1a0f.jpg)  
-The signal segment, along with features extracted, is put in a PostgreSQL database. Near-live queries are run behind a tableau dashboard.
+![ECG]( https://i.pinimg.com/originals/2b/c4/68/2bc468ca7a012a8bb595e55607bb1a0f.jpg)  
+The signal segment, along with features extracted, is put in a PostgreSQL database.
+Near real-time queries are run behind a Dash webapp.
 
 ## Pipeline
  ![Pipeline]( .png/Architecture.png)
@@ -27,11 +29,11 @@ The typical size of the structures is 3 kB.
 2.	Kafka-python producer programs are run on EC2 instances.
 Those producer programs send those structures as messages to a three-broker Kafka cluster.
 The data from one subject is published to one Kafka topic, and vice versa.
-3.	Spark subscribe to a "pattern" of topics from the Kafka cluster and consume the data received as a direct stream.
+3.	Python scripts subscribe to a "pattern" of topics from the Kafka cluster and consume the data received as a direct stream.
 For each segment of ECG signals P, T, Q, and S are time-wise located.
-Then, all together, put into a database managed by PostgreSQL.
-4.	A tableau dashboard is utilized to simulate the experience of the remote care provider.
-The patient could certainly have access to the extracted features.
+Then, all together, put into a PostgreSQL database.
+4.	A Dash webapp is utilized to simulate the experience of the remote care provider.
+Tableau dashboards are used to visualize aggregated data.
 
 ## Demo
 [Youtube Link]( https://www.youtube.com/watch?v=HSC9m9Lz-PM)
@@ -58,20 +60,26 @@ It can be found at [https://healthdata.gov/dataset/health-care-provider-credenti
 ## Repo Structure
 ```
 ├── README.md     
+|
+├── set_up
+|   └── anote_cluster.sh            cluster set-up parameters.
+|   └── anote_distributions.sh      distributions of the software used.
+|   └── setup_get_dev_tools.sh      get "Development Tools".
+|   └── setup_ ____ _node.sh        setup a specific EC2 node.
+|   └── setup_ ____ _node.txt       notes for setting up the node.
+|
 ├── sh   
-|   └── anote.____.sh       cluster set-up parameters.   
-|   └── setup.____.sh       set up various EC-2 instances.   
-|   └── test.____.sh        unit and integration tests.   
-|   └── util.____.sh        cluster maintenance.   
+|   └── anote_cluster.sh            cluster set-up parameters.
+|   └── anote_distributions.sh      distributions of the software used.
+|   └── create_kafka_topics.sh      batch creation of Kafka topics.
+|   └── delete_kafka_topics.sh      batch deletion of Kafka topics.
+|   └── run_ ____.sh                run a specific function.
+|
 ├── src  
-|   └── test____.py         for unit and integration tests.   
-|   └── run____.py          for system tests.   
-├── Data Source  
+|   └── ____.py                     python source code.
+|
+├── data_source  
 |   └── README.md  
-|   └── Preprocessing__.py  generating the data source   
-|   └── ecg-sample.json     a sample file of the data generated   
-├── .png   
-|   └── ____.png    
-├── references    
-|   └── ____.pdf    
+|   └── preprocessing.py            generating the data source   
+|   └── ecg-sample.json             a sample file of the data generated   
 ```
