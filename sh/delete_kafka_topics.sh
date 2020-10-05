@@ -1,15 +1,15 @@
-#!/bin/sh
-# DY200630
+#!/bin/bash
+# DY200623
 
 cd "$(dirname "$0")" 
 echo $PWD
-. ./anote.cluster.sh
+. ./anote_cluster.sh
 
 topic_head_str="ecg-"
-for i in {006000..007510}
+for i in {006000..007511}
     do
         topic=$topic_head_str$i
 	kafka-topics.sh --zookeeper $zookeeperIp:$zookeeperPort \
-            --create --topic $topic --partitions 1 --replication-factor 3
+            --delete --topic $topic
         echo $topic
 done

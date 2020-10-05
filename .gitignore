@@ -1,9 +1,8 @@
-.local/*
-sh/anote.cluster.sh
+.local*
+*anote.cluster.sh
 *~*
-sh\anote.cluster.sh
 #*#
 testingNotes*
 *.swp
-.idea/*
-
+.idea*
+venv*
